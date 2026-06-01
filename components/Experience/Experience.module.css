@@ -1,0 +1,144 @@
+/* components/Experience/Experience.module.css */
+
+/* ─── Astrolabe (Jam Relik Mesir Kuno) ─── */
+.astrolabe {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 900px;
+  height: 900px;
+  margin-top: -450px;
+  margin-left: -450px; /* Diposisikan tepat di tengah sisi kiri layar */
+  color: #D4AF37; /* Gold/Sand Khonshu */
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  animation: relicSpin 60s linear infinite;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Saat node di-hover, jam bereaksi: berputar lebih cepat & memancarkan glow */
+.astrolabeActive {
+  opacity: 0.35;
+  animation: relicSpin 15s linear infinite;
+  filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.6));
+}
+
+@keyframes relicSpin {
+  100% { transform: rotate(360deg); }
+}
+
+/* ─── Node Lintasan (Titik Pengalaman) ─── */
+.nodeWrapper {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  margin-left: -30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.nodeCore {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.nodeCore::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.4s ease;
+}
+
+/* State Aktif untuk Titik */
+.nodeActive .nodeCore {
+  background: #D4AF37;
+  box-shadow: 0 0 20px #D4AF37;
+  transform: scale(1.3);
+}
+
+.nodeActive .nodeCore::before {
+  inset: -12px;
+  border-color: rgba(212, 175, 55, 0.6);
+  animation: pulseMagic 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes pulseMagic {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Label Tahun di Samping Node */
+.nodeLabel {
+  position: absolute;
+  left: 100%;
+  margin-left: 15px;
+  white-space: nowrap;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.nodeWrapper:hover .nodeLabel {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nodeActive .nodeLabel {
+  color: #D4AF37;
+  transform: translateX(10px);
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  font-weight: bold;
+}
+
+/* ─── Kartu Display Utama (Glassmorphism) ─── */
+.glassDisplayCard {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Garis Aksen Emas di sebelah kiri kartu */
+.glassDisplayCard::before {
+  content: '';
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  width: 4px; 
+  height: 100%;
+  background: linear-gradient(180deg, #D4AF37 0%, rgba(212, 175, 55, 0.1) 100%);
+  box-shadow: 0 0 20px #D4AF37;
+}
+
+/* Watermark SVG Hieroglif di dalam Kartu */
+.cardWatermark {
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  font-size: 15rem;
+  color: rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}

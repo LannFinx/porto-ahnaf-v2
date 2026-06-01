@@ -1,0 +1,392 @@
+/* components/Projects/Projects.module.css */
+
+.sectionWrapper {
+  position: relative;
+  z-index: 10;
+}
+
+/* ─── Header ─── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sectionLine {
+  height: 1px;
+  width: 3rem;
+  background: #D4AF37;
+}
+
+.sectionLabel {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: #D4AF37;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #ffffff 0%, #a0a0b0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.titleAccent {
+  -webkit-text-fill-color: #D4AF37;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   HORIZONTAL ACCORDION — Desktop
+   ═══════════════════════════════════════════ */
+.accordionHorizontal {
+  display: flex;
+  gap: 8px;
+  /* Jarak antar panel */
+  height: 550px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .accordionHorizontal {
+    display: none;
+  }
+}
+
+/* ─── Individual Panel ─── */
+.panel {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 20px;
+  /* Konsisten dengan Glassmorphism di section lain */
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.4s ease;
+  will-change: width, flex;
+  /* Optimasi GPU */
+}
+
+.panelExpanded {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
+}
+
+/* ─── Panel Background Image ─── */
+.panelImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: filter 0.8s ease, transform 0.8s ease, opacity 0.8s ease;
+}
+
+.panel .panelImage {
+  filter: grayscale(100%) brightness(0.25);
+  opacity: 0.5;
+  transform: scale(1.05);
+}
+
+.panelExpanded .panelImage {
+  filter: grayscale(0%) brightness(0.6);
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Overlay gradient untuk teks */
+.panelOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.3) 50%, transparent 100%);
+  opacity: 0.8;
+  transition: opacity 0.6s ease;
+}
+
+.panelExpanded .panelOverlay {
+  opacity: 1;
+}
+
+/* ─── Collapsed Content (Vertikal) ─── */
+.collapsedContent {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.panelExpanded .collapsedContent {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rotatedTitle {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: white;
+  white-space: nowrap;
+}
+
+.collapsedGlyph {
+  font-size: 1.5rem;
+  color: #D4AF37;
+  opacity: 0.4;
+}
+
+/* ─── Expanded Content (Glass Card) ─── */
+.expandedContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: 0s;
+}
+
+.panelExpanded .expandedContent {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 0.3s;
+  /* Muncul setelah panel melebar */
+}
+
+.glassCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+}
+
+.expandedYear {
+  display: inline-flex;
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: #D4AF37;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.expandedTitle {
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.expandedSubtitle {
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: #D4AF37;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.expandedDesc {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tag {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.65rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Tombol CTA */
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 8px;
+  color: #D4AF37;
+  font-size: 0.8rem;
+  font-family: monospace;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  background: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  color: white;
+}
+
+/* ─── Crescent Moon Indicator ─── */
+.crescentContainer {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.panelExpanded .crescentContainer {
+  opacity: 1;
+}
+
+.crescentMoon {
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+  animation: crescentFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes crescentFloat {
+  0% {
+    transform: translateY(0) rotate(-10deg);
+  }
+
+  100% {
+    transform: translateY(-8px) rotate(10deg);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   VERTICAL ACCORDION — Mobile
+   ═══════════════════════════════════════════ */
+.accordionVertical {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .accordionVertical {
+    display: flex;
+  }
+}
+
+.vPanel {
+  position: relative;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: border-color 0.4s ease;
+}
+
+.vPanelActive {
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.vPanelImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.6s ease;
+}
+
+.vPanel .vPanelImage {
+  filter: grayscale(100%) brightness(0.2);
+}
+
+.vPanelActive .vPanelImage {
+  filter: grayscale(0%) brightness(0.4);
+}
+
+.vCollapsed {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 1rem;
+  background: linear-gradient(to right, rgba(5, 7, 15, 0.9), transparent);
+}
+
+.vCollapsedGlyph {
+  color: #D4AF37;
+  font-size: 1.2rem;
+}
+
+.vCollapsedTitle {
+  color: white;
+  font-weight: 700;
+  flex: 1;
+}
+
+.vCollapsedChevron {
+  color: #D4AF37;
+  transition: transform 0.4s ease;
+}
+
+.vPanelActive .vCollapsedChevron {
+  transform: rotate(180deg);
+}
+
+.vExpanded {
+  position: relative;
+  z-index: 5;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.vExpandedDesc {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,743 @@
+/* components/Hero/Hero.module.css */
+
+.heroSection {
+  --void: transparent;
+  --white: #f0f0f0;
+  --silver: #c0c0c8;
+  --silver-dim: #6b6b78;
+  --gold: #d4af37;
+  --gold-dim: rgba(212, 175, 55, 0.45);
+  --gold-glow: rgba(212, 175, 55, 0.5);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background-color: var(--void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════
+   TOMB SPOTLIGHT — Flashlight cursor reveal
+   Uses CSS mask on a hidden hieroglyph layer
+   Mouse position via CSS vars (no re-renders)
+   ═══════════════════════════════════════════ */
+.tombSpotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tombGlyphGrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 0;
+  padding: 1rem;
+  font-size: 2rem;
+  color: var(--gold);
+  opacity: 0;
+  /* Radial mask follows --mouse-x / --mouse-y */
+  mask-image: radial-gradient(circle 180px at var(--mouse-x, -200px) var(--mouse-y, -200px),
+      black 0%,
+      rgba(0, 0, 0, 0.4) 40%,
+      transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 180px at var(--mouse-x, -200px) var(--mouse-y, -200px),
+      black 0%,
+      rgba(0, 0, 0, 0.4) 40%,
+      transparent 100%);
+  transition: opacity 0.6s ease;
+}
+
+.tombGlyphGridActive {
+  opacity: 1;
+}
+
+.tombGlyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+  user-select: none;
+}
+
+/* Subtle pulsing for individual glyphs */
+.tombGlyph:nth-child(odd) {
+  animation: tombPulseA 5s ease-in-out infinite alternate;
+}
+
+.tombGlyph:nth-child(even) {
+  animation: tombPulseB 6s ease-in-out infinite alternate;
+}
+
+@keyframes tombPulseA {
+  0% {
+    opacity: 0.15;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tombPulseB {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Subtle radial glow that follows cursor */
+.tombGlow {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  /* Positioned via inline style from JS */
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+.tombGlowActive {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════ */
+.inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1440px;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem);
+  padding-top: clamp(6rem, 15vh, 8rem);
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 6fr 5fr;
+    gap: 4rem;
+  }
+}
+
+.contentGrid {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0.8rem, 1.5vh, 1.2rem);
+  padding-left: clamp(10px, 4vw, 40px);
+}
+
+/* ═══════════════════════════════════════════
+   SHATTERED REALITY TEXT
+   Glitch/split effect on hover — the name
+   splits into 2-3 shifted transparent layers
+   ═══════════════════════════════════════════ */
+.shatterContainer {
+  position: relative;
+  width: 100%;
+  cursor: default;
+}
+
+.shatterBase {
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: transparent;
+  background: linear-gradient(to bottom, #fff 0%, #fff 60%, rgba(255, 255, 255, 0.3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
+  position: relative;
+  z-index: 3;
+  transition: opacity 0.2s ease;
+}
+
+/* Shatter layers — hidden by default, shown on hover */
+.shatterLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: block;
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shatterLayer1 {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  z-index: 2;
+}
+
+.shatterLayer2 {
+  background: linear-gradient(to bottom, rgba(212, 175, 55, 0.4) 0%, rgba(212, 175, 55, 0.1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  z-index: 1;
+}
+
+/* On hover: layers split apart */
+.shatterContainer:hover .shatterBase {
+  opacity: 0.7;
+}
+
+.shatterContainer:hover .shatterLayer1 {
+  opacity: 1;
+  transform: translate(-4px, -3px) skewX(-0.5deg);
+}
+
+.shatterContainer:hover .shatterLayer2 {
+  opacity: 1;
+  transform: translate(5px, 4px) skewX(0.8deg);
+}
+
+/* Mobile: reduce shatter intensity */
+@media (max-width: 768px) {
+  .shatterContainer:hover .shatterLayer1 {
+    transform: translate(-2px, -2px);
+  }
+
+  .shatterContainer:hover .shatterLayer2 {
+    transform: translate(3px, 2px);
+  }
+}
+
+/* Glitch scanline flash on hover */
+.shatterScanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px);
+  mix-blend-mode: overlay;
+}
+
+.shatterContainer:hover .shatterScanline {
+  animation: scanlineFlash 0.4s ease-out forwards;
+}
+
+@keyframes scanlineFlash {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The period after the name */
+.nameDot {
+  -webkit-text-fill-color: white;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+}
+
+/* ═══════════════════════════════════════════
+   VISUAL SHOWCASE (Right Side)
+   ═══════════════════════════════════════════ */
+.visualWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+
+.imageContainer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 450px;
+  transform-style: preserve-3d;
+  cursor: grab;
+}
+
+.imageContainer:active {
+  cursor: grabbing;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(80%) brightness(0.8) blur(1px) opacity(0.8);
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s ease;
+  transform: translateZ(30px);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+.imageContainer:hover .heroImage {
+  filter: grayscale(0%) brightness(1.1) blur(0px) opacity(1);
+}
+
+/* Moon glow behind image */
+.moonDecor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+  box-shadow: 0 0 80px rgba(255, 255, 255, 0.05), inset 0 0 40px rgba(255, 255, 255, 0.02);
+  z-index: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ═══════════════════════════════════════════
+   ASTROLABE RINGS — Multi-layered ornament
+   ═══════════════════════════════════════════ */
+.astrolabeContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  margin-top: -250px;
+  margin-left: -250px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Individual rings */
+.astroRing {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.astroRing svg {
+  width: 100%;
+  height: 100%;
+}
+
+.astroRingOuter {
+  opacity: 0.08;
+  animation: astroSpinCW 50s linear infinite;
+}
+
+.astroRingMiddle {
+  opacity: 0.12;
+  animation: astroSpinCCW 35s linear infinite;
+}
+
+.astroRingInner {
+  opacity: 0.06;
+  animation: astroSpinCW 25s linear infinite;
+}
+
+/* When dragging (mousedown) — rings spin faster & glow */
+.astroRingDragging .astroRingOuter {
+  opacity: 0.3;
+  animation-duration: 4s !important;
+}
+
+.astroRingDragging .astroRingMiddle {
+  opacity: 0.4;
+  animation-duration: 3s !important;
+}
+
+.astroRingDragging .astroRingInner {
+  opacity: 0.25;
+  animation-duration: 5s !important;
+}
+
+/* On image hover — subtle glow increase */
+.astroRingHover .astroRingOuter {
+  opacity: 0.15;
+}
+
+.astroRingHover .astroRingMiddle {
+  opacity: 0.2;
+}
+
+.astroRingHover .astroRingInner {
+  opacity: 0.12;
+}
+
+@keyframes astroSpinCW {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes astroSpinCCW {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PRESERVED COMPONENTS
+   ═══════════════════════════════════════════ */
+
+/* ─── Vertical Side Text ─── */
+.verticalText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--silver-dim);
+  user-select: none;
+  padding: 1rem 0;
+}
+
+.verticalTextLeft {
+  position: fixed;
+  left: clamp(0.5rem, 2vw, 1.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.verticalTextRight {
+  position: fixed;
+  right: clamp(0.5rem, 2vw, 1.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1024px) {
+
+  .verticalTextLeft,
+  .verticalTextRight {
+    display: none;
+  }
+
+  .contentGrid {
+    padding-left: 0;
+  }
+
+  .moonDecor {
+    width: 250px;
+    height: 250px;
+  }
+
+  .astrolabeContainer {
+    width: 350px;
+    height: 350px;
+    margin-top: -175px;
+    margin-left: -175px;
+  }
+}
+
+.verticalLine {
+  color: var(--silver-dim);
+}
+
+.verticalDivider {
+  color: var(--gold-dim);
+  font-size: 0.5rem;
+}
+
+/* ─── Status Pill ─── */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.pingDot {
+  position: relative;
+  display: flex;
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.pingRipple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.7);
+  animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.pingCore {
+  position: relative;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  background: var(--gold);
+}
+
+@keyframes ping {
+
+  75%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.statusText {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 1.2vw, 0.72rem);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--silver);
+}
+
+/* ─── Hieroglyph Strip ─── */
+.hieroglyphStrip {
+  display: flex;
+  gap: clamp(0.6rem, 1.5vw, 1.2rem);
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.glyph {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: var(--gold-dim);
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
+  user-select: none;
+}
+
+/* ─── Tagline ─── */
+.tagline {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 300;
+  color: var(--silver);
+  letter-spacing: 0.02em;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* ─── Coordinates ─── */
+.coordBlock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.coordDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+  transition: opacity 0.15s;
+}
+
+.coordText {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 1.1vw, 0.7rem);
+  color: var(--silver-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.coordText strong {
+  color: var(--silver);
+  font-weight: 600;
+}
+
+.coordStatus {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(100, 220, 120, 0.7);
+  text-transform: uppercase;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── CTA Buttons ─── */
+.bottomRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.ctaWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: 4px;
+  background: var(--white);
+  color: #05070a;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.06);
+  transition: background 0.2s, box-shadow 0.3s;
+}
+
+.ctaPrimary:hover {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 255, 255, 0.15);
+}
+
+.ctaArrow {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  letter-spacing: -0.03em;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--silver);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, box-shadow 0.3s;
+}
+
+.ctaSecondary:hover {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.7);
+  color: rgba(212, 175, 55, 1);
+}
+
+/* ─── Role Chips ─── */
+.roleChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver-dim);
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.chip:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+/* ─── Scroll Indicator ─── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scrollDot {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, var(--gold-dim) 0%, transparent 100%);
+}
+
+.scrollLabel {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--silver-dim);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .bottomRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,144 @@
+/* components/Education/Education.module.css */
+
+/* ─── Mystic Tarot Cards ─── */
+.tarotCard {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.2) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2); /* Gold border tipis */
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tarotCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.5), transparent 50%, rgba(255, 255, 255, 0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.5s ease;
+}
+
+.tarotCard:hover {
+  border-color: rgba(212, 175, 55, 0.8);
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(212, 175, 55, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.02);
+}
+
+.tarotCard:hover::before {
+  opacity: 1;
+}
+
+/* ─── Corner Ornaments (Fase Bulan & Bintang) ─── */
+.ornament {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  color: #D4AF37;
+  opacity: 0.4;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.tarotCard:hover .ornament {
+  opacity: 1;
+}
+
+.ornamentTopLeft { top: 12px; left: 12px; }
+.ornamentTopRight { top: 12px; right: 12px; transform: rotate(90deg); }
+.ornamentBottomLeft { bottom: 12px; left: 12px; transform: rotate(-90deg); }
+.ornamentBottomRight { bottom: 12px; right: 12px; transform: rotate(180deg); }
+
+/* ─── Relic Button (Tombol Lihat Sertifikat) ─── */
+.relicButton {
+  margin-top: auto; /* Mendorong tombol ke bagian paling bawah kartu */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  color: #D4AF37;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.relicButton::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+  transition: all 0.5s ease;
+}
+
+.relicButton:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: #D4AF37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  color: #ffffff;
+}
+
+.relicButton:hover::after {
+  left: 100%;
+}
+
+/* ─── Modal Relic Viewer Overlay ─── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 7, 10, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1rem;
+}
+
+.modalContent {
+  position: relative;
+  background: linear-gradient(180deg, rgba(30, 35, 45, 0.9) 0%, rgba(10, 12, 15, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  /* FIX: Menggunakan clamp untuk padding responsif yang valid di CSS murni */
+  padding: clamp(1.5rem, 5vw, 3rem);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 175, 55, 0.1);
+}
+
+/* Custom Scrollbar untuk Modal */
+.modalContent::-webkit-scrollbar {
+  width: 6px;
+}
+.modalContent::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.modalContent::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.5);
+  border-radius: 10px;
+}

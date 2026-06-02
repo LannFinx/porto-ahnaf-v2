@@ -2,13 +2,13 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { portfolioData, Certificate } from '@/data/portfolioData';
 import { useLang } from '@/contexts/LanguageContext';
 import styles from './Education.module.css';
 
 // ─── Variants Animasi ────────────────────────────────────────────────────────
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -16,17 +16,20 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 50, filter: 'blur(10px)' },
   visible: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+    }
   },
 };
 
-const modalVariants = {
+const modalVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
     opacity: 1,
@@ -42,7 +45,7 @@ const modalVariants = {
   }
 };
 
-const overlayVariants = {
+const overlayVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
   exit: { opacity: 0 }
@@ -143,7 +146,7 @@ export default function Education() {
       <AnimatePresence>
         {selectedCerts && (
           <motion.div
-            key="relic-modal-overlay" // <-- INI PENTING UNTUK MENCEGAH ERROR FRAMER MOTION
+            key="relic-modal-overlay"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"

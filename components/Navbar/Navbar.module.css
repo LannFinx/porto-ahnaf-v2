@@ -1,40 +1,95 @@
 /* components/Navbar/Navbar.module.css */
 
 /* ═══════════════════════════════════════════
-   THE CELESTIAL PILL — Floating Navbar
-   Moon Knight: Midnight Blue · Gold · White
+   THE BREATHING HEADER — Dynamic Navbar
+   Moon Knight Theme: Midnight Blue · Gold · Glass
    ═══════════════════════════════════════════ */
 
-/* ─── Floating Pill Container (Desktop) ─── */
+/* ─── Base State: Floating Pill (Saat di-scroll) ─── */
 .navPill {
   position: fixed;
-  top: 1rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
   display: flex;
   align-items: center;
-  gap: 0;
-  padding: 0.4rem 0.5rem;
+  justify-content: space-between;
+  /* Menjaga jarak Kiri, Tengah, Kanan */
+
+  /* Animasi Transisi Halus (The Breathing Effect) */
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Styling Kapsul */
+  top: 1.5rem;
+  width: clamp(320px, 90vw, 850px);
+  padding: 0.5rem 0.6rem 0.5rem 1.2rem;
   border-radius: 999px;
-  background: rgba(10, 14, 30, 0.4);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(212, 175, 55, 0.12);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
-    0 0 60px rgba(212, 175, 55, 0.03);
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
-  max-width: calc(100vw - 2rem);
+  background: rgba(10, 14, 30, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
-.navPill:hover {
-  border-color: rgba(212, 175, 55, 0.25);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-    0 0 80px rgba(212, 175, 55, 0.06);
+/* ─── Top State: Merged with Hero (Saat di puncak) ─── */
+.navPillAtTop {
+  top: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+  border-radius: 0;
+
+  /* Gradient transparan menyatu ke Hero */
+  background: linear-gradient(180deg, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.4) 50%, transparent 100%);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+/* Garis Cahaya Sihir Khonshu (Hanya muncul saat di Top) */
+.navPill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, #D4AF37 50%, transparent 90%);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.navPillAtTop::before {
+  opacity: 1;
+}
+
+/* ─── Layout Groups ─── */
+.navLeft {
+  display: flex;
+  align-items: center;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .navCenter {
+    display: none;
+  }
+
+  /* Sembunyikan menu desktop di HP */
 }
 
 /* ─── Logo Section ─── */
@@ -42,10 +97,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.8rem;
   text-decoration: none;
   color: #f0f0f0;
-  flex-shrink: 0;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left center;
+}
+
+/* Logo membesar sedikit saat di puncak */
+.navPillAtTop .logoLink {
+  transform: scale(1.15);
 }
 
 .logoText {
@@ -56,111 +116,36 @@
   color: #f0f0f0;
 }
 
-/* Tiny rotating hieroglyph ring next to logo */
 .logoRelic {
   display: inline-block;
   color: #D4AF37;
-  opacity: 0.5;
+  opacity: 0.8;
   font-size: 0.75rem;
-  animation: relicSpin 20s linear infinite;
-  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
 }
 
-@keyframes relicSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* ─── Desktop Navigation Links ─── */
-.desktopNav {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  position: relative;
-  padding: 0 0.25rem;
-}
-
-@media (max-width: 768px) {
-  .desktopNav {
-    display: none;
-  }
-}
-
-.navLinkWrapper {
-  position: relative;
-  z-index: 2;
-}
-
+/* ─── Desktop Links ─── */
 .navLink {
-  display: block;
   padding: 0.5rem 0.85rem;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  color: rgba(192, 192, 200, 0.7);
-  border-radius: 999px;
-  transition: color 0.25s ease;
-  white-space: nowrap;
-  position: relative;
-  z-index: 2;
+  color: rgba(192, 192, 200, 0.6);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .navLink:hover {
-  color: #f0f0f0;
-}
-
-.navLinkActive {
   color: #D4AF37;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-/* ─── Crescent Tracker (layoutId hover indicator) ─── */
-.crescentTracker {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  border-radius: 999px;
-  background: rgba(212, 175, 55, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-/* Tiny crescent SVG inside the tracker */
-.crescentIcon {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  opacity: 0.4;
-}
-
-/* ─── Pill Divider ─── */
-.pillDivider {
-  width: 1px;
-  height: 18px;
-  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.25), transparent);
-  flex-shrink: 0;
-  margin: 0 0.15rem;
-}
-
-/* ─── Contact CTA Button ─── */
+/* ─── CTA Button ─── */
 .ctaButton {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 999px;
   background: rgba(212, 175, 55, 0.12);
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -171,36 +156,42 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.ctaButton:hover {
-  background: rgba(212, 175, 55, 0.25);
-  border-color: #D4AF37;
-  color: #fff;
+/* Tombol lebih menonjol saat di puncak */
+.navPillAtTop .ctaButton {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.6);
+  padding: 0.6rem 1.5rem;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
 }
 
-/* ─── Mobile Hamburger Button ─── */
+.ctaButton:hover {
+  background: rgba(212, 175, 55, 0.4);
+  color: #fff;
+}
+
+/* ─── Pill Divider ─── */
+.pillDivider {
+  width: 1px;
+  height: 18px;
+  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.3), transparent);
+}
+
+/* ─── Mobile Hamburger ─── */
 .hamburger {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: none;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   color: #f0f0f0;
   cursor: pointer;
-  transition: border-color 0.3s ease;
-  flex-shrink: 0;
-}
-
-.hamburger:hover {
-  border-color: rgba(212, 175, 55, 0.5);
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -209,228 +200,115 @@
   }
 }
 
+.hamburger:hover {
+  border-color: #D4AF37;
+  color: #D4AF37;
+}
+
 /* ═══════════════════════════════════════════
-   MOBILE: FULL-SCREEN MYSTIC OVERLAY
+   MOBILE FULL-SCREEN OVERLAY
    ═══════════════════════════════════════════ */
 .mobileOverlay {
   position: fixed;
   inset: 0;
-  z-index: 9998;
-  background: rgba(5, 7, 15, 0.92);
-  backdrop-filter: blur(30px) saturate(1.2);
-  -webkit-backdrop-filter: blur(30px) saturate(1.2);
+  z-index: 10000;
+  background: rgba(3, 5, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
-  overflow: hidden;
 }
 
-/* Close button in overlay */
 .overlayClose {
   position: absolute;
-  top: 1.2rem;
+  top: 1.5rem;
   right: 1.5rem;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
+  border: none;
   color: #f0f0f0;
   cursor: pointer;
-  transition: border-color 0.3s ease;
   z-index: 10;
 }
 
-.overlayClose:hover {
-  border-color: #D4AF37;
-}
-
-/* Background astrolabe decoration */
 .overlayAstrolabe {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(80vw, 500px);
-  height: min(80vw, 500px);
+  width: min(90vw, 500px);
+  height: min(90vw, 500px);
   opacity: 0.04;
   pointer-events: none;
-  animation: overlayRelicSpin 40s linear infinite;
 }
 
-@keyframes overlayRelicSpin {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-/* Mobile nav links */
 .mobileNavLinks {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  position: relative;
+  gap: 2rem;
   z-index: 5;
 }
 
 .mobileLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
-  text-decoration: none;
   color: rgba(192, 192, 200, 0.8);
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  transition: color 0.3s ease;
-  position: relative;
+  text-decoration: none;
 }
 
 .mobileLink:hover {
   color: #f0f0f0;
 }
 
-.mobileLinkGlyph {
-  color: #D4AF37;
-  font-size: 1rem;
-  opacity: 0.4;
-  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
-}
-
 .mobileCta {
   margin-top: 1.5rem;
-  padding: 0.8rem 2rem;
+  padding: 1rem 2.5rem;
   border-radius: 8px;
-  background: rgba(212, 175, 55, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
   color: #D4AF37;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 5;
 }
 
-.mobileCta:hover {
-  background: rgba(212, 175, 55, 0.25);
-  color: #fff;
-}
-
-/* ─── Mobile logo in overlay ─── */
-.overlayLogo {
-  position: absolute;
-  top: 1.2rem;
-  left: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  z-index: 10;
-}
-
-.overlayLogoText {
-  font-weight: 800;
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #f0f0f0;
-}
-
-/* ═══════════════════════════════════════════
-   LANGUAGE TOGGLE — ID/EN Pill
-   ═══════════════════════════════════════════ */
+/* ─── Language Toggle ─── */
 .langToggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.25rem;
   padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: border-color 0.3s ease, background 0.3s ease;
-  flex-shrink: 0;
-}
-
-.langToggle:hover {
-  border-color: rgba(212, 175, 55, 0.4);
-  background: rgba(212, 175, 55, 0.06);
 }
 
 .langActive {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
   color: #D4AF37;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }
 
 .langInactive {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  color: rgba(192, 192, 200, 0.35);
+  color: rgba(192, 192, 200, 0.4);
 }
 
 .langSlash {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 0.55rem;
-  color: rgba(255, 255, 255, 0.15);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.2);
 }
 
-/* Mobile language toggle (in overlay) */
-.mobileLangToggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.6rem 1.5rem;
-  margin-top: 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-  position: relative;
-  z-index: 5;
-}
-
-.mobileLangToggle:hover {
-  border-color: rgba(212, 175, 55, 0.4);
-}
-
-.mobileLangToggle .langActive {
-  font-size: 0.85rem;
-}
-
-.mobileLangToggle .langInactive {
-  font-size: 0.85rem;
-}
-
-.mobileLangToggle .langSlash {
-  font-size: 0.75rem;
-}
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE UTILITIES & BREAKPOINTS
-   ═══════════════════════════════════════════ */
-
-/* Desktop-only elements */
 .desktopOnly {
   display: flex;
 }
@@ -438,30 +316,5 @@
 @media (max-width: 768px) {
   .desktopOnly {
     display: none;
-  }
-}
-
-/* Small mobile: shrink pill padding and logo */
-@media (max-width: 420px) {
-  .navPill {
-    padding: 0.3rem 0.4rem;
-    top: 0.5rem;
-  }
-
-  .logoLink {
-    padding: 0.3rem 0.4rem;
-  }
-
-  .logoText {
-    font-size: 0.75rem;
-  }
-
-  .langToggle {
-    padding: 0.3rem 0.45rem;
-  }
-
-  .langActive,
-  .langInactive {
-    font-size: 0.5rem;
   }
 }

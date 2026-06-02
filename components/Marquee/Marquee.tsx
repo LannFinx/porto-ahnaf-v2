@@ -1,7 +1,8 @@
-// components/Marquee.tsx
+// components/Marquee/Marquee.tsx
 // ═══════════════════════════════════════════════════════════════
 //  THE DUALITY TAPE — Dual Marquee
-//  Two opposing rows + hover slow/glow + inline glyphs
+//  Two opposing rows (Stark White + Gold Outline)
+//  Pure CSS @keyframes — zero React layout reflow
 // ═══════════════════════════════════════════════════════════════
 'use client';
 
@@ -15,12 +16,12 @@ const TECH_ITEMS = [
 
 const GLYPHS = ['𓂀', '𓅃', '𓆣', '𓇯', '𓊖', '𓋹', '𓃗', '𓈖'];
 
-// Build repeating content for seamless loop (2x = one visible + one offscreen)
+// Build 2x repeating content for seamless CSS loop
 function Row1Content() {
   return (
     <>
       {[0, 1].map((rep) => (
-        <span key={rep}>
+        <span key={rep} aria-hidden={rep === 1}>
           {TECH_ITEMS.map((item, i) => (
             <span key={`${rep}-${i}`}>
               <span className={styles.textWhite}>{item}</span>
@@ -37,7 +38,7 @@ function Row2Content() {
   return (
     <>
       {[0, 1].map((rep) => (
-        <span key={rep}>
+        <span key={rep} aria-hidden={rep === 1}>
           {TECH_ITEMS.map((item, i) => (
             <span key={`${rep}-${i}`}>
               <span className={styles.textGold}>{item}</span>
@@ -55,8 +56,8 @@ function Row2Content() {
 // ═══════════════════════════════════════════════════════════════
 export default function Marquee() {
   return (
-    <div className={styles.marqueeSection}>
-      {/* Row 1: Bold white, scrolls left */}
+    <div className={styles.marqueeSection} aria-label="Tech stack marquee">
+      {/* Row 1: Stark White, scrolls left */}
       <div className={`${styles.marqueeRow} ${styles.row1}`}>
         <Row1Content />
       </div>

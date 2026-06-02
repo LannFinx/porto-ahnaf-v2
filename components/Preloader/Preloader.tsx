@@ -1,8 +1,4 @@
 // components/Preloader.tsx
-// ═══════════════════════════════════════════════════════════════
-//  THE AWAKENING OF KHONSHU — Preloader
-//  Spinning hieroglyph ring + split-door tomb exit
-// ═══════════════════════════════════════════════════════════════
 'use client';
 
 import { motion, AnimatePresence, Variants } from 'framer-motion';
@@ -12,15 +8,16 @@ import styles from './Preloader.module.css';
 
 // ─── Animation variants ────────────────────────────────────────
 const centerVariants: Variants = {
-  hidden: { scale: 0.7, opacity: 0 },
+  hidden: { scale: 0.9, opacity: 0 },
   visible: {
     scale: 1,
     opacity: 1,
     transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
   },
   exit: {
-    scale: 1.2,
+    scale: 1.1,
     opacity: 0,
+    filter: 'blur(10px)',
     transition: { duration: 0.4, ease: 'easeIn' },
   },
 };
@@ -42,7 +39,7 @@ const doorTopVariants: Variants = {
   closed: { y: 0 },
   open: {
     y: '-100%',
-    transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
+    transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
   },
 };
 
@@ -50,20 +47,54 @@ const doorBottomVariants: Variants = {
   closed: { y: 0 },
   open: {
     y: '100%',
-    transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
+    transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
   },
+};
+
+// Varian Animasi Khusus untuk Garis Emas (Seam of Light)
+const seamVariants: Variants = {
+  initial: { scaleX: 0, opacity: 0 },
+  loading: {
+    scaleX: 1,
+    opacity: 1,
+    transition: { duration: 2, ease: "easeInOut" }
+  },
+  open: {
+    scaleX: 1,
+    opacity: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
 };
 
 export default function Preloader() {
   const { lang } = useLang();
-  const protocolText = lang === 'id' ? 'MEMULAI PROTOKOL KHONSHU...' : 'INITIATING KHONSHU PROTOCOL...';
+  const protocolText = lang === 'id' ? 'MEMULAI PROTOKOL...' : 'INITIATING PROTOCOL...';
+
   const [phase, setPhase] = useState<'loading' | 'opening' | 'done'>('loading');
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Phase 1: loading ring spins for 2.2s
+    // Menghitung persentase dari 0 ke 100 dalam 2 detik
+    let start = Date.now();
+    const duration = 2000;
+
+    const updateProgress = () => {
+      const now = Date.now();
+      const elapsed = now - start;
+      const p = Math.min((elapsed / duration) * 100, 100);
+      setProgress(Math.floor(p));
+
+      if (p < 100) {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+    requestAnimationFrame(updateProgress);
+
+    // Phase 1: Selesai loading (2.2 detik) memberi jeda 200ms saat 100%
     const t1 = setTimeout(() => setPhase('opening'), 2200);
-    // Phase 2: doors slide away, then unmount
-    const t2 = setTimeout(() => setPhase('done'), 3300);
+    // Phase 2: Pintu selesai terbuka dan preloader dihancurkan (3.5 detik)
+    const t2 = setTimeout(() => setPhase('done'), 3500);
+
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -74,7 +105,50 @@ export default function Preloader() {
 
   return (
     <>
-      {/* ── Main loading content (center relic) ── */}
+      {/* ── Split-door (PINTU MAKAM - MENJADI BACKGROUND) ── */}
+      <AnimatePresence>
+        {(phase === 'loading' || phase === 'opening') && (
+          <>
+            <motion.div
+              className={styles.doorTop}
+              variants={doorTopVariants}
+              initial="closed"
+              animate={phase === 'opening' ? 'open' : 'closed'}
+              exit="open"
+              key="door-top"
+            >
+              <div className={styles.voidBg} />
+              {/* Garis Cahaya yang melebar seiring hitungan progress */}
+              <motion.div
+                className={styles.doorSeam}
+                variants={seamVariants}
+                initial="initial"
+                animate={phase === 'loading' ? 'loading' : 'open'}
+              />
+            </motion.div>
+
+            <motion.div
+              className={styles.doorBottom}
+              variants={doorBottomVariants}
+              initial="closed"
+              animate={phase === 'opening' ? 'open' : 'closed'}
+              exit="open"
+              key="door-bottom"
+            >
+              <div className={styles.voidBg} />
+              {/* Garis Cahaya Bawah (Simetris) */}
+              <motion.div
+                className={styles.doorSeam}
+                variants={seamVariants}
+                initial="initial"
+                animate={phase === 'loading' ? 'loading' : 'open'}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Main loading content (Di atas pintu) ── */}
       <AnimatePresence>
         {phase === 'loading' && (
           <motion.div
@@ -85,8 +159,6 @@ export default function Preloader() {
             exit="exit"
             key="preloader-center"
           >
-            <div className={styles.voidBg} />
-
             <div className={styles.relicCenter}>
               {/* Spinning hieroglyph ring */}
               <div className={styles.hieroglyphRing}>
@@ -97,12 +169,12 @@ export default function Preloader() {
                   <defs>
                     <path id="preloaderArc" d="M250,250 m-230,0 a230,230 0 1,1 460,0 a230,230 0 1,1 -460,0" />
                   </defs>
-                  <text fill="#D4AF37" opacity="0.5" fontSize="14" letterSpacing="12">
+                  <text fill="#D4AF37" opacity="0.6" fontSize="16" letterSpacing="12">
                     <textPath href="#preloaderArc">𓂀𓃗𓅃𓆣𓇯𓈖𓊖𓌀𓎛𓐍𓁿𓀭𓃠𓆗𓋹𓍝𓂋𓄿𓇋𓈎𓉐𓊃</textPath>
                   </text>
                 </svg>
 
-                {/* Inner ring (counter-rotate) */}
+                {/* Inner ring */}
                 <div className={styles.ringInner}>
                   <svg viewBox="0 0 200 200" fill="none">
                     <circle cx="100" cy="100" r="95" stroke="#D4AF37" strokeWidth="1" strokeDasharray="8 12" />
@@ -121,7 +193,7 @@ export default function Preloader() {
               </div>
 
               {/* Protocol text with typing animation */}
-              <motion.div 
+              <motion.div
                 className={styles.protocolText}
                 variants={textVariants}
                 initial="hidden"
@@ -134,42 +206,18 @@ export default function Preloader() {
                 ))}
               </motion.div>
 
-              {/* Progress dots */}
-              <div className={styles.progressBar}>
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <span key={i} className={styles.progressDot} />
-                ))}
-              </div>
+              {/* Angka Persentase Berdiri Sendiri */}
+              <motion.div
+                className={styles.progressPercent}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {progress}%
+              </motion.div>
+
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Split-door tomb opening ── */}
-      <AnimatePresence>
-        {(phase === 'loading' || phase === 'opening') && (
-          <>
-            <motion.div
-              className={styles.doorTop}
-              variants={doorTopVariants}
-              initial="closed"
-              animate={phase === 'opening' ? 'open' : 'closed'}
-              exit="open"
-              key="door-top"
-            >
-              <div className={styles.doorSeam} />
-            </motion.div>
-            <motion.div
-              className={styles.doorBottom}
-              variants={doorBottomVariants}
-              initial="closed"
-              animate={phase === 'opening' ? 'open' : 'closed'}
-              exit="open"
-              key="door-bottom"
-            >
-              <div className={styles.doorSeam} />
-            </motion.div>
-          </>
         )}
       </AnimatePresence>
     </>

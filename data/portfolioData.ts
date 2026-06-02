@@ -152,6 +152,7 @@ export const portfolioData = {
   ] as Experience[],
 
   // ── PENDIDIKAN & SERTIFIKAT ─────────────────────────────────
+
   education: [
     {
       id: "edu-01",
@@ -159,23 +160,80 @@ export const portfolioData = {
       period: "2023 — 2026",
       major: "Rekayasa Perangkat Lunak (RPL)",
       details: [
-        "Juara 1 Video RSPS – JUMPA PMR Tingkat Provinsi | 2023",
-        "Divisi Lapangan MPK – OSIS/MPK SMK Telkom Banjarbaru"
+        "Lulusan Kompetensi Keahlian Rekayasa Perangkat Lunak dengan fokus Backend & Arsitektur Sistem.",
+        "Juara 1 Video RSPS – JUMPA PMR Tingkat Provinsi (2023).",
+        "Aktif di Divisi Lapangan MPK – OSIS/MPK SMK Telkom Banjarbaru."
       ],
       certificates: [
         {
-          id: "cert-1",
+          id: "cert-skl",
+          title: "Sertifikat Kompetensi Lulusan (SKL) RPL",
+          issuer: "SMK Telkom Banjarbaru / BNSP",
+          year: "2026",
+          image: "/assets/sertif/skl.webp"
+        },
+        {
+          id: "cert-magang",
+          title: "Sertifikat Praktik Kerja Lapangan (Internship)",
+          issuer: "Neumedira",
+          year: "2025",
+          image: "/assets/sertif/magang.webp"
+        },
+        {
+          id: "cert-frontend",
+          title: "Dasar Pemrograman Web / Frontend Development",
+          issuer: "Sertifikasi Kompetensi",
+          year: "2025",
+          image: "/assets/sertif/frontend.webp"
+        },
+        {
+          id: "cert-ui",
+          title: "UI/UX Design Fundamentals",
+          issuer: "Sertifikasi Kompetensi",
+          year: "2024",
+          image: "/assets/sertif/ui-design.webp"
+        },
+        {
+          id: "cert-ux",
+          title: "UX Research",
+          issuer: "Sertifikasi Kompetensi",
+          year: "2024",
+          image: "/assets/sertif/ux-research.webp"
+        },
+        {
+          id: "cert-brand",
+          title: "Brand Identity Design",
+          issuer: "Sertifikasi Kompetensi",
+          year: "2024",
+          image: "/assets/sertif/brand-identity.webp"
+        },
+        {
+          id: "cert-toeic",
+          title: "TOEIC English Proficiency Certification",
+          issuer: "ETS",
+          year: "2025",
+          image: "/assets/sertif/toeic.webp"
+        },
+        {
+          id: "cert-excel",
+          title: "Pengoperasian Dasar Microsoft Excel",
+          issuer: "Sertifikasi Pelatihan",
+          year: "2024",
+          image: "/assets/sertif/excel.webp"
+        },
+        {
+          id: "cert-canva",
+          title: "Mahir Desain Grafis dengan Canva",
+          issuer: "Sertifikasi Pelatihan",
+          year: "2024",
+          image: "/assets/sertif/canva.webp"
+        },
+        {
+          id: "cert-juara1",
           title: "Juara 1 Video RSPS Tingkat Provinsi",
           issuer: "JUMPA PMR",
           year: "2023",
-          image: "/assets/cert-1.webp" // Siapkan gambar dummy/asli di public/assets/
-        },
-        {
-          id: "cert-2",
-          title: "Sertifikasi Kompetensi Keahlian RPL",
-          issuer: "BNSP / SMK Telkom",
-          year: "2026",
-          image: "/assets/cert-2.webp"
+          image: "/assets/sertif/juara-1.webp"
         }
       ]
     },
@@ -185,9 +243,9 @@ export const portfolioData = {
       period: "2019 — 2022",
       major: undefined,
       details: [
-        "Fokus pada pendidikan akademik dasar dan pembentukan karakter."
+        "Fokus pada pendidikan akademik dasar, kepemimpinan, dan pembentukan karakter."
       ],
-      certificates: [] // Kosongkan jika tidak ada sertifikat di SMP
+      certificates: []
     }
   ] as Education[],
 
